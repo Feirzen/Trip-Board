@@ -1,0 +1,51 @@
+{
+  "updated": "2026-09-16",
+  "trips": [
+    {
+      "id": "nye-2027",
+      "name": "New Year's getaway",
+      "destination": null,
+      "airports": ["SLC", "PVU"],
+      "window": "Dec 30, 2026 to Jan 4 or 5, 2027",
+      "flexibility": "Dates flexible by a few days either side",
+      "status": "planning",
+      "flightPlan": "Points first (Chase UR or BILT)",
+      "lodgingPlan": "Cash, cheap and safe",
+      "targets": {
+        "allInTwo": null,
+        "flightCashTwo": null,
+        "flightPointsEach": null,
+        "lodgingPerNight": null
+      },
+      "targetSetOn": null,
+      "reviewAfterDays": 30,
+      "floorAllInTwo": null,
+      "trackedRoutes": [],
+      "notes": "Peak holiday pricing. Low key destination, no fixed region yet. This one rewards deciding and booking more than waiting.",
+      "priceLog": []
+    },
+    {
+      "id": "graduation-may-2027",
+      "name": "Graduation trip",
+      "destination": null,
+      "airports": ["SLC", "PVU"],
+      "window": "Mid May 2027",
+      "flexibility": "Open on exact dates and destination",
+      "status": "planning",
+      "flightPlan": "Points first (Chase UR or BILT)",
+      "lodgingPlan": "Cash, cheap and safe",
+      "targets": {
+        "allInTwo": null,
+        "flightCashTwo": null,
+        "flightPointsEach": null,
+        "lodgingPerNight": null
+      },
+      "targetSetOn": null,
+      "reviewAfterDays": 30,
+      "floorAllInTwo": null,
+      "trackedRoutes": [],
+      "notes": "Spanish speaking country, celebrating graduation and wife's Spanish. Shoulder season, so this is the one where patient price watching actually pays.",
+      "priceLog": []
+    }
+  ]
+}
