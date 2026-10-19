@@ -174,6 +174,8 @@
   }
   .empty strong{display:block;font-family:var(--serif);font-size:17px;color:#fff;margin-bottom:4px}
 
+  .flagline{text-align:center;margin:8px 0 0}
+  .flagline button{background:none;border:0;color:rgba(255,255,255,.45);font-size:12.5px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:6px}
   footer.stamp{
     color:rgba(255,255,255,.45);
     font-size:12.5px;
@@ -199,6 +201,7 @@
   <section class="panel" id="panel-trips" role="tabpanel" aria-labelledby="tab-trips"></section>
 
   <footer class="stamp" id="stamp"></footer>
+  <p class="flagline"><button type="button" onclick="window.Kit && Kit.flag.menu()">Raise a flag</button></p>
 </div>
 
 <script>
@@ -403,6 +406,6 @@ Promise.all([
   $("#panel-trips").innerHTML = $("#panel-alerts").innerHTML;
 });
 </script>
-<script src="https://cdn.jsdelivr.net/gh/Feirzen/flag-hub@main/kit/kit.js" data-app="trip-board" data-name="Trip Board" data-look="off" data-gear="off" defer></script>
+<script src="https://feirzen.github.io/flag-hub/kit/kit.js" data-app="trip-board" data-name="Trip Board" data-look="off" data-gear="off" data-button="off" defer></script>
 </body>
 </html>
