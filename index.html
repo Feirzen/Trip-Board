@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Trip Board</title>
+<script>try{var L=JSON.parse(localStorage.getItem("tb-look")||"{}");if(L.theme&&L.theme!=="dark")document.documentElement.setAttribute("data-look",L.theme)}catch(e){}</script>
 <style>
   :root{
     --ink:#0d1b3e;
@@ -16,7 +17,17 @@
     --muted:#6b7280;
     --serif: Georgia, "Iowan Old Style", "Times New Roman", serif;
     --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --on:255,255,255;          /* text and outlines that sit right on the page background */
+    --card-line:rgba(0,0,0,.06);
   }
+  /* Looks (shared settings gear). Navy is the original. The masthead stays dark in every look. */
+  html[data-look="light"]{--ink-deep:#ece6d8;--paper:#ffffff;--on:13,27,62;--card-line:rgba(13,27,62,.1)}
+  html[data-look="sepia"]{--ink:#3a2c20;--ink-deep:#241b14;--gold:#e0a458;--cadet:#7a9a86;--paper:#f3e6d1;--text:#2b2118;--muted:#7a6a58;--line:rgba(58,44,32,.16);--on:255,236,214}
+  body{transition:background .5s ease}
+  /* colors for the shared gear's tray and panels: always the dark masthead palette, so they read in every look */
+  .fk{--bg:var(--ink-deep);--surface:var(--ink);--surface2:color-mix(in srgb,var(--ink) 75%,#000);--border:rgba(255,255,255,.16);--border2:rgba(255,255,255,.3);
+      --text:#f4f1e8;--dim:rgba(255,255,255,.85);--muted:rgba(255,255,255,.58);--accent:var(--gold);--accBg:color-mix(in srgb,var(--gold) 18%,transparent);
+      --ok:#4fd1a0;--bad:#f37b7b;--star:var(--gold);--scrim:rgba(0,0,0,.55);--shadow:rgba(0,0,0,.45);color-scheme:dark}
   *{box-sizing:border-box}
   html,body{margin:0;padding:0}
   body{
@@ -30,6 +41,7 @@
   .shell{max-width:660px;margin:0 auto;padding:0 16px 64px}
 
   header.masthead{
+    position:relative;
     background:var(--ink);
     color:#fff;
     padding:28px 20px 22px;
@@ -45,6 +57,10 @@
     letter-spacing:.3px;
   }
   .masthead p{margin:6px 0 0;color:rgba(255,255,255,.72);font-size:14px}
+  .masthead .gear{position:absolute;top:16px;right:14px;width:38px;height:38px;border-radius:50%;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.06);color:var(--gold);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,border-color .2s}
+  .masthead .gear:hover,.masthead .gear[aria-expanded="true"]{background:rgba(255,255,255,.12);border-color:var(--gold)}
+  .masthead .gear:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+  .masthead h1,.masthead p{padding-right:44px}
 
   nav.tabs{display:flex;gap:8px;margin-bottom:20px}
   nav.tabs button{
@@ -52,9 +68,9 @@
     font:inherit;
     font-size:15px;
     padding:11px 8px;
-    background:rgba(255,255,255,.06);
-    color:rgba(255,255,255,.7);
-    border:1px solid rgba(255,255,255,.12);
+    background:rgba(var(--on),.06);
+    color:rgba(var(--on),.7);
+    border:1px solid rgba(var(--on),.12);
     border-radius:9px;
     cursor:pointer;
   }
@@ -74,7 +90,7 @@
     border-radius:12px;
     padding:16px 16px 14px;
     margin-bottom:12px;
-    border:1px solid rgba(0,0,0,.06);
+    border:1px solid var(--card-line);
   }
 
   .trip-head{
@@ -153,7 +169,7 @@
     padding:0;
     margin-bottom:12px;
     overflow:hidden;
-    border:1px solid rgba(0,0,0,.06);
+    border:1px solid var(--card-line);
   }
   .alert .bar{padding:9px 16px;font-family:var(--serif);font-size:15px;color:#fff}
   .alert.S .bar{background:var(--ink);color:var(--gold)}
@@ -165,19 +181,17 @@
   .alert a{color:var(--ink);font-weight:600}
 
   .empty{
-    background:rgba(255,255,255,.05);
-    border:1px dashed rgba(255,255,255,.22);
-    color:rgba(255,255,255,.8);
+    background:rgba(var(--on),.05);
+    border:1px dashed rgba(var(--on),.22);
+    color:rgba(var(--on),.8);
     border-radius:12px;
     padding:22px 18px;
     font-size:15px;
   }
-  .empty strong{display:block;font-family:var(--serif);font-size:17px;color:#fff;margin-bottom:4px}
+  .empty strong{display:block;font-family:var(--serif);font-size:17px;color:rgb(var(--on));margin-bottom:4px}
 
-  .flagline{text-align:center;margin:8px 0 0}
-  .flagline button{background:none;border:0;color:rgba(255,255,255,.45);font-size:12.5px;text-decoration:underline;text-underline-offset:3px;cursor:pointer;padding:6px}
   footer.stamp{
-    color:rgba(255,255,255,.45);
+    color:rgba(var(--on),.5);
     font-size:12.5px;
     text-align:center;
     margin-top:26px;
@@ -188,6 +202,7 @@
 <div class="shell">
 
   <header class="masthead">
+    <button class="gear" id="gearBtn" type="button" aria-label="Settings" title="Settings" aria-expanded="false"><svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09a1.65 1.65 0 0 0-1-1.51 1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09a1.65 1.65 0 0 0 1.51-1 1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33h.01a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82v.01a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></button>
     <h1>Trip Board</h1>
     <p>What we're watching, what it costs, and what's worth booking.</p>
   </header>
@@ -201,7 +216,6 @@
   <section class="panel" id="panel-trips" role="tabpanel" aria-labelledby="tab-trips"></section>
 
   <footer class="stamp" id="stamp"></footer>
-  <p class="flagline"><button type="button" onclick="window.Kit && Kit.flag.menu()">Raise a flag</button></p>
 </div>
 
 <script>
@@ -406,6 +420,44 @@ Promise.all([
   $("#panel-trips").innerHTML = $("#panel-alerts").innerHTML;
 });
 </script>
-<script src="https://feirzen.github.io/flag-hub/kit/kit.js" data-app="trip-board" data-name="Trip Board" data-look="off" data-gear="off" data-button="off" defer></script>
+<script>
+/* Shared settings gear (Feirzen/flag-hub kit): the masthead gear rolls out Look and Flag.
+   Trip Board paints its own looks; Navy is the original. */
+(function () {
+  const KEY = "tb-look", root = document.documentElement;
+  let L = { theme: "dark", tone: "any", lock: null };
+  try { Object.assign(L, JSON.parse(localStorage.getItem(KEY) || "{}")); } catch (e) {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(L)); } catch (e) {} };
+  const VARS = ["ink", "ink-deep", "gold", "cadet", "paper", "text", "muted", "line", "on", "card-line"];
+  let cur = null;
+  function makeCham() {
+    const h = Math.floor(Math.random() * 360), a = (h + 150 + Math.floor(Math.random() * 90)) % 360;
+    const light = L.tone === "light" ? true : L.tone === "dark" ? false : Math.random() < 0.28;
+    const H = (x, s, l) => `hsl(${x} ${s}% ${l}%)`;
+    return { light, v: {
+      ink: H(h, 45, 17), "ink-deep": light ? H(h, 32, 91) : H(h, 42, 8), gold: H(a, 85, light ? 46 : 60), cadet: H((h + 40) % 360, 38, 46),
+      paper: light ? "#fff" : H(h, 30, 96), text: H(h, 28, 14), muted: H(h, 12, 42), line: `hsl(${h} 30% 20% / .15)`,
+      on: light ? "20,24,40" : "255,255,255", "card-line": `hsl(${h} 30% 20% / .1)` } };
+  }
+  function paint() {
+    root.setAttribute("data-look", L.theme === "dark" ? "" : L.theme);
+    if (L.theme === "chameleon") { cur = L.lock || makeCham(); VARS.forEach(k => root.style.setProperty("--" + k, cur.v[k])); }
+    else VARS.forEach(k => root.style.removeProperty("--" + k));
+  }
+  window.KitConfig = {
+    gear: "#gearBtn",
+    look: {
+      labels: { dark: "Navy", light: "Paper" },
+      get: () => ({ theme: L.theme, tone: L.tone, locked: !!L.lock }),
+      set: t => { L.theme = t; L.lock = null; save(); paint(); },
+      tone: t => { L.tone = t; L.lock = null; save(); paint(); },
+      lock: on => { L.lock = on ? cur : null; save(); },
+      reroll: () => { if (L.theme === "chameleon" && !L.lock) paint(); },
+    },
+  };
+  paint();
+})();
+</script>
+<script src="https://feirzen.github.io/flag-hub/kit/kit.js" data-app="trip-board" data-name="Trip Board" defer></script>
 </body>
 </html>
